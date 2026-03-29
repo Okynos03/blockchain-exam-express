@@ -41,20 +41,20 @@ async function getFromPeer(url, path) {
 
 async function propagateTransaction(transaction) {
   const urls = peers.getUrls();
-  await Promise.all(urls.map((url) => postToPeer(url, '/internal/transactions', transaction)));
+  await Promise.all(urls.map((url) => postToPeer(url, '/api/internal/transactions', transaction)));
 }
 
 async function propagateBlock(block) {
   const urls = peers.getUrls();
-  await Promise.all(urls.map((url) => postToPeer(url, '/blocks', { block })));
+  await Promise.all(urls.map((url) => postToPeer(url, '/api/blocks', { block })));
 }
 
 async function pingPeer(url) {
-  return getFromPeer(url, '/ping');
+  return getFromPeer(url, '/api/ping');
 }
 
 async function registerOnBootstrap(bootstrapUrl) {
-  return postToPeer(bootstrapUrl, '/nodes/register', { node: env.nodeUrl });
+  return postToPeer(bootstrapUrl, '/api/nodes/register', { node: env.nodeUrl });
 }
 
 module.exports = {

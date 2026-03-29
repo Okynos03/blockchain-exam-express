@@ -34,17 +34,19 @@ app.get('/', (req, res) => {
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use('/nodes', nodesRoutes);
-app.use('/transactions', transactionsRoutes);
-app.post('/internal/transactions', transactionsController.receiveInternalTransaction);
-app.post('/mine', blocksController.mineBlock);
-app.use('/blocks', blocksRoutes);
-app.use('/chain', chainRoutes);
-app.use('/ping', healthRoutes);
-app.use('/personas', personasRoutes);
-app.use('/instituciones', institucionesRoutes);
-app.use('/programas', programasRoutes);
-app.use('/niveles-grado', nivelesRoutes);
+const apiPrefix = '/api';
+
+app.use(`${apiPrefix}/nodes`, nodesRoutes);
+app.use(`${apiPrefix}/transactions`, transactionsRoutes);
+app.post(`${apiPrefix}/internal/transactions`, transactionsController.receiveInternalTransaction);
+app.post(`${apiPrefix}/mine`, blocksController.mineBlock);
+app.use(`${apiPrefix}/blocks`, blocksRoutes);
+app.use(`${apiPrefix}/chain`, chainRoutes);
+app.use(`${apiPrefix}/ping`, healthRoutes);
+app.use(`${apiPrefix}/personas`, personasRoutes);
+app.use(`${apiPrefix}/instituciones`, institucionesRoutes);
+app.use(`${apiPrefix}/programas`, programasRoutes);
+app.use(`${apiPrefix}/niveles-grado`, nivelesRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

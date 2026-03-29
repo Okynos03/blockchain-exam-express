@@ -11,7 +11,7 @@ async function resolveConflicts() {
   let replaced = false;
 
   for (const peerUrl of peerUrls) {
-    const data = await propagation.getFromPeer(peerUrl, '/chain');
+    const data = await propagation.getFromPeer(peerUrl, '/api/chain');
     if (!data || !Array.isArray(data.chain)) continue;
 
     if (data.chain.length > bestChain.length) {

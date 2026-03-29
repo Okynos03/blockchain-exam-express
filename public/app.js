@@ -43,7 +43,7 @@ async function request(method, path, body) {
 }
 
 async function ping() {
-  await request('GET', '/ping');
+  await request('GET', '/api/ping');
 }
 
 function fillSelect(id, data, labelBuilder, includeEmpty = false) {
@@ -66,9 +66,9 @@ function fillSelect(id, data, labelBuilder, includeEmpty = false) {
 }
 
 async function loadCatalogs() {
-  const personas = await fetch(getBaseUrl() + '/personas').then((r) => r.json());
-  const instituciones = await fetch(getBaseUrl() + '/instituciones').then((r) => r.json());
-  const programas = await fetch(getBaseUrl() + '/programas').then((r) => r.json());
+  const personas = await fetch(getBaseUrl() + '/api/personas').then((r) => r.json());
+  const instituciones = await fetch(getBaseUrl() + '/api/instituciones').then((r) => r.json());
+  const programas = await fetch(getBaseUrl() + '/api/programas').then((r) => r.json());
 
   fillSelect(
     'persona_id',
@@ -113,11 +113,11 @@ async function sendTransaction() {
     firmado_por: document.getElementById('firmado_por').value
   };
 
-  await request('POST', '/transactions', body);
+  await request('POST', '/api/transactions', body);
 }
 
 async function mineBlock() {
-  await request('POST', '/mine');
+  await request('POST', '/api/mine');
 }
 
 async function postJson(path, textareaId) {
