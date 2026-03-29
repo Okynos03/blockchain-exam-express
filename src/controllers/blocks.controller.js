@@ -32,6 +32,7 @@ async function receiveBlock(req, res, next) {
 
     const result = await degreeService.acceptExternalBlock(block);
     if (!result.valid) {
+      
       return res.status(409).json({ error: result.reason });
     }
 

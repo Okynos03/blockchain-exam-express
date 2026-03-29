@@ -7,11 +7,14 @@ const gradosRepository = require('../repositories/grados.repository');
 async function resolveConflicts() {
   const peerUrls = peers.getUrls();
   const localChain = await gradosRepository.getAllDegrees();
+
   let bestChain = localChain;
   let replaced = false;
 
   for (const peerUrl of peerUrls) {
     const data = await propagation.getFromPeer(peerUrl, '/api/chain');
+    console.log('peerUrl:', peerUrl, data);
+
     if (!data || !Array.isArray(data.chain)) continue;
 
     if (data.chain.length > bestChain.length) {
@@ -21,6 +24,11 @@ async function resolveConflicts() {
         replaced = true;
       }
     }
+  }
+
+  if (replaced) {
+    await gradosRepository.deleteAllDegrees();
+    await gradosRepository.insertManyDegrees(bestChain);
   }
 
   logger.info('Consensus ejecutado', {
@@ -33,7 +41,7 @@ async function resolveConflicts() {
     replaced,
     chain: bestChain,
     message: replaced
-      ? 'La cadena local debe ser reemplazada por una más larga y válida'
+      ? 'Cadena local reemplazada por la más larga válida'
       : 'La cadena local ya es la más larga válida'
   };
 }

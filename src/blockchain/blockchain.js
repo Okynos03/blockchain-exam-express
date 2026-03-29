@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const env = require('../config/env');
 const { normalizeDegreeRow } = require('../utils/normalize');
+const { convertProcessSignalToExitCode } = require('util');
 
 class Blockchain {
   constructor() {
@@ -8,25 +9,24 @@ class Blockchain {
     this.difficulty = env.powDifficulty || 3;
   }
 
-  calculateHashFromData({
-    persona_id,
-    institucion_id,
-    titulo_obtenido,
-    fecha_fin,
-    hash_anterior,
-    nonce
-  }) {
-    const payload = [
-      persona_id || '',
-      institucion_id || '',
-      titulo_obtenido || '',
-      fecha_fin || '',
-      hash_anterior || '',
-      String(nonce ?? '')
-    ].join('|');
+calculateHashFromData({
+  persona_id,
+  institucion_id,
+  titulo_obtenido,
+  fecha_fin,
+  hash_anterior,
+  nonce
+}) {
+  const payload =
+    `${persona_id || ''}` +
+    `${institucion_id || ''}` +
+    `${titulo_obtenido || ''}` +
+    `${fecha_fin || ''}` +
+    `${hash_anterior || ''}` +
+    `${String(nonce ?? '')}`;
 
-    return crypto.createHash('sha256').update(payload).digest('hex');
-  }
+  return crypto.createHash('sha256').update(payload).digest('hex');
+}
 
   proofOfWork(transaction, previousHash) {
     let nonce = 0;
@@ -49,9 +49,15 @@ class Blockchain {
   }
 
   validateBlock(block, previousBlock) {
-    const expectedPreviousHash = previousBlock ? previousBlock.hash_actual : '000';
+    const expectedPreviousHash = previousBlock ? previousBlock.hash_actual : '0';
+
+    console.log('=== VALIDANDO BLOQUE EXTERNO ===');
+    console.log('Bloque recibido:', block);
+    console.log('Bloque previo local:', previousBlock);
+
 
     if (block.hash_anterior !== expectedPreviousHash) {
+      console.log("no debo entrar aqui");
       return {
         valid: false,
         reason: 'hash_anterior no coincide con el bloque previo'
@@ -68,6 +74,8 @@ class Blockchain {
     });
 
     if (recalculatedHash !== block.hash_actual) {
+      console.log("Recalculates hash:", recalculatedHash);
+      console.log("actual hash:", block.hash_actual);
       return {
         valid: false,
         reason: 'hash_actual inválido'
@@ -75,6 +83,7 @@ class Blockchain {
     }
 
     if (!String(block.hash_actual).startsWith('0'.repeat(this.difficulty))) {
+      console.log("proof of work invalid")
       return {
         valid: false,
         reason: 'proof of work inválido'
