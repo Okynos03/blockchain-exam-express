@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blockchain Node Tester</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Probador del nodo blockchain</h1>
+    <p class="intro">
+      Usa esta interfaz para probar catálogos, transacciones, minado, peers y chain.
+    </p>
+
+    <div class="card">
+      <label for="baseUrl">URL base del nodo</label>
+      <input id="baseUrl" value="http://localhost:8001" />
+
+      <div class="row-3 top-actions">
+        <button onclick="ping()">GET /ping</button>
+        <button class="secondary" onclick="loadCatalogs()">Cargar catálogos</button>
+        <button class="light" onclick="copyResponse()">Copiar respuesta</button>
+      </div>
+
+      <div class="status" id="status">Sin ejecutar</div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h3>Datos base</h3>
+          <div class="row-3">
+            <button onclick="request('GET', '/personas')">GET /personas</button>
+            <button onclick="request('GET', '/instituciones')">GET /instituciones</button>
+            <button onclick="request('GET', '/programas')">GET /programas</button>
+          </div>
+
+          <div class="row-3 spaced">
+            <button onclick="request('GET', '/niveles-grado')">GET /niveles-grado</button>
+            <button onclick="request('GET', '/chain')">GET /chain</button>
+            <button onclick="request('GET', '/nodes')">GET /nodes</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Transacción</h3>
+
+          <div class="row">
+            <div>
+              <label for="persona_id">Persona</label>
+              <select id="persona_id"></select>
+            </div>
+
+            <div>
+              <label for="institucion_id">Institución</label>
+              <select id="institucion_id"></select>
+            </div>
+
+            <div>
+              <label for="programa_id">Programa</label>
+              <select id="programa_id"></select>
+            </div>
+
+            <div>
+              <label for="fecha_inicio">Fecha inicio</label>
+              <input id="fecha_inicio" value="2018-08-01" />
+            </div>
+
+            <div>
+              <label for="fecha_fin">Fecha fin</label>
+              <input id="fecha_fin" value="2022-06-01" />
+            </div>
+
+            <div>
+              <label for="titulo_obtenido">Título obtenido</label>
+              <input id="titulo_obtenido" value="Ingeniería en Sistemas" />
+            </div>
+
+            <div>
+              <label for="numero_cedula">Número cédula</label>
+              <input id="numero_cedula" value="12345678" />
+            </div>
+
+            <div>
+              <label for="menciones">Menciones</label>
+              <input id="menciones" value="Honorífica" />
+            </div>
+
+            <div class="full">
+              <label for="titulo_tesis">Título tesis</label>
+              <input id="titulo_tesis" value="Sistema distribuido académico" />
+            </div>
+
+            <div class="full">
+              <label for="firmado_por">Firmado por</label>
+              <input id="firmado_por" value="Nodo Express" />
+            </div>
+          </div>
+
+          <div class="row-3 spaced">
+            <button onclick="sendTransaction()">POST /transactions</button>
+            <button class="secondary" onclick="mineBlock()">POST /mine</button>
+            <button class="light" onclick="request('GET', '/chain')">Actualizar chain</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Peers</h3>
+
+          <div class="row">
+            <div>
+              <label for="bootstrapBody">Body /nodes/bootstrap</label>
+              <textarea id="bootstrapBody">{
+  "nodes": ["http://localhost:8002"]
+}</textarea>
+              <button class="spaced-button" onclick="postJson('/nodes/bootstrap', 'bootstrapBody')">
+                POST /nodes/bootstrap
+              </button>
+            </div>
+
+            <div>
+              <label for="registerBody">Body /nodes/register</label>
+              <textarea id="registerBody">{
+  "node": "http://localhost:8002"
+}</textarea>
+              <button class="spaced-button" onclick="postJson('/nodes/register', 'registerBody')">
+                POST /nodes/register
+              </button>
+            </div>
+
+            <div>
+              <label for="joinBody">Body /nodes/join</label>
+              <textarea id="joinBody">{
+  "bootstrapUrl": "http://localhost:8001"
+}</textarea>
+              <button class="spaced-button" onclick="postJson('/nodes/join', 'joinBody')">
+                POST /nodes/join
+              </button>
+            </div>
+
+            <div>
+              <label>Acciones rápidas</label>
+              <button onclick="request('GET', '/nodes')">GET /nodes</button>
+              <button class="secondary spaced-button" onclick="request('GET', '/nodes/resolve')">
+                GET /nodes/resolve
+              </button>
+              <button class="light spaced-button" onclick="request('GET', '/ping')">
+                GET /ping
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Probador personalizado</h3>
+
+          <div class="row">
+            <div>
+              <label for="customMethod">Método</label>
+              <select id="customMethod">
+                <option>GET</option>
+                <option>POST</option>
+                <option>PUT</option>
+                <option>DELETE</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="customPath">Path</label>
+              <input id="customPath" value="/ping" />
+            </div>
+          </div>
+
+          <div class="spaced">
+            <label for="customBody">JSON body</label>
+            <textarea id="customBody">{}</textarea>
+          </div>
+
+          <div class="spaced">
+            <button onclick="runCustom()">Ejecutar request personalizado</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Respuesta</h3>
+          <pre id="response">Aquí aparecerán las respuestas del servidor.</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

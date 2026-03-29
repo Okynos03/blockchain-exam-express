@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 
@@ -25,12 +26,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.get('/', (req, res) => {
-  res.json({
-    message: 'Academic blockchain node active',
-    docs: '/docs'
-  });
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
