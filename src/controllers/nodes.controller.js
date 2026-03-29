@@ -81,4 +81,8 @@ async function joinBootstrap(req, res, next) {
 module.exports = {
   bootstrapNodes,
   registerNode,
+  getPeers,
+  resolveNodes,
+  ping,
+  joinBootstrap
 };
