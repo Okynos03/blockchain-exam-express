@@ -7,7 +7,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- TABLE: personas
 -- =========================
 CREATE TABLE personas (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   apellido_paterno VARCHAR(100) NOT NULL,
   apellido_materno VARCHAR(100),
@@ -16,26 +16,26 @@ CREATE TABLE personas (
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO personas (nombre, apellido_paterno, apellido_materno, curp, correo) VALUES
-('Luis', 'Quijano', 'Martínez', 'QUIJ900101HDFABC01', 'luis@example.com'),
-('Ana', 'García', 'López', 'GALA920202MDFABC02', 'ana@example.com'),
-('Carlos', 'Ramírez', 'Santos', 'RASC910303HDFABC03', 'carlos@example.com');
+INSERT INTO personas (id, nombre, apellido_paterno, apellido_materno, curp, correo) VALUES
+('11111111-1111-1111-1111-111111111111', 'Luis', 'Quijano', 'Martínez', 'QUIJ900101HDFABC01', 'luis@example.com'),
+('22222222-2222-2222-2222-222222222222', 'Ana', 'García', 'López', 'GALA920202MDFABC02', 'ana@example.com'),
+('33333333-3333-3333-3333-333333333333', 'Carlos', 'Ramírez', 'Santos', 'RASC910303HDFABC03', 'carlos@example.com');
 
 -- =========================
 -- TABLE: instituciones
 -- =========================
 CREATE TABLE instituciones (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
   pais VARCHAR(100),
   estado VARCHAR(100),
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO instituciones (nombre, pais, estado) VALUES
-('UNAM', 'México', 'CDMX'),
-('ITESM', 'México', 'Nuevo León'),
-('UDG', 'México', 'Jalisco');
+INSERT INTO instituciones (id, nombre, pais, estado) VALUES
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'UNAM', 'México', 'CDMX'),
+('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'ITESM', 'México', 'Nuevo León'),
+('cccccccc-cccc-cccc-cccc-cccccccccccc', 'UDG', 'México', 'Jalisco');
 
 -- =========================
 -- TABLE: niveles_grado
@@ -56,18 +56,18 @@ INSERT INTO niveles_grado (id, nombre) VALUES
 -- TABLE: programas
 -- =========================
 CREATE TABLE programas (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
   nivel_grado_id INT REFERENCES niveles_grado(id),
   creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO programas (nombre, nivel_grado_id) VALUES
-('Ingeniería en Sistemas', 2),
-('Medicina', 2),
-('Derecho', 2),
-('Maestría en IA', 3),
-('Doctorado en Ciencias', 4);
+INSERT INTO programas (id, nombre, nivel_grado_id) VALUES
+('aaaa1111-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Ingeniería en Sistemas', 2),
+('bbbb2222-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Medicina', 2),
+('cccc3333-cccc-cccc-cccc-cccccccccccc', 'Derecho', 2),
+('dddd4444-dddd-dddd-dddd-dddddddddddd', 'Maestría en IA', 3),
+('eeee5555-eeee-eeee-eeee-eeeeeeeeeeee', 'Doctorado en Ciencias', 4);
 
 -- =========================
 -- TABLE: grados (BLOCKCHAIN)
@@ -75,7 +75,7 @@ INSERT INTO programas (nombre, nivel_grado_id) VALUES
 CREATE TABLE grados (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
-  persona_id UUID REFERENCES personas(id) ON DELETE CASCADE,
+  persona_id UUID REFERENCES personas(id),
   institucion_id UUID REFERENCES instituciones(id),
   programa_id UUID REFERENCES programas(id),
 

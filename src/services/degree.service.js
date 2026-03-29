@@ -8,7 +8,7 @@ async function getChain() {
 
 async function buildMinedBlock(transaction) {
   const lastDegree = await gradosRepository.getLastDegree();
-  const previousHash = lastDegree ? lastDegree.hash_actual : '0';
+  const previousHash = lastDegree ? lastDegree.hash_actual : '000';
 
   const { nonce, hash_actual, hash_anterior } = blockchain.proofOfWork(transaction, previousHash);
 
