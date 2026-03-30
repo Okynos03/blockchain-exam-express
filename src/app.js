@@ -19,6 +19,8 @@ const blocksController = require('./controllers/blocks.controller');
 const notFound = require('./middleware/notfound.middleware');
 const errorHandler = require('./middleware/error.middleware');
 
+const blockchain = require('./blockchain/blockchain');
+
 const swaggerDocument = YAML.load('./openapi.yaml');
 
 const app = express();
@@ -30,6 +32,13 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+app.get('/api/debug/pending-transactions', (req, res) => {
+  res.json({
+    count: blockchain.getPendingTransactions().length,
+    pending: blockchain.getPendingTransactions()
+  });
 });
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

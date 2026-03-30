@@ -50,6 +50,14 @@ async function acceptExternalBlock(block) {
   }
 
   await gradosRepository.insertDegree(block);
+
+  blockchain.removePendingTransactionByBlock(block);
+
+  logger.info('Bloque externo aceptado', {
+    hash_actual: block.hash_actual,
+    persona_id: block.persona_id
+  });
+
   return { valid: true };
 }
 

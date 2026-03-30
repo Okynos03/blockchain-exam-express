@@ -116,6 +116,25 @@ calculateHashFromData({
     return this.pendingTransactions;
   }
 
+    removePendingTransactionByBlock(block) {
+    this.pendingTransactions = this.pendingTransactions.filter((tx) => {
+      return !(
+        tx.persona_id === block.persona_id &&
+        tx.institucion_id === block.institucion_id &&
+        tx.programa_id === block.programa_id &&
+        tx.fecha_inicio === block.fecha_inicio &&
+        tx.fecha_fin === block.fecha_fin &&
+        tx.titulo_obtenido === block.titulo_obtenido &&
+        (tx.numero_cedula || null) === (block.numero_cedula || null) &&
+        (tx.titulo_tesis || null) === (block.titulo_tesis || null) &&
+        (tx.menciones || null) === (block.menciones || null) &&
+        tx.firmado_por === block.firmado_por
+      );
+    });
+
+    return this.pendingTransactions;
+  }
+
   getPendingTransactions() {
     return [...this.pendingTransactions];
   }
